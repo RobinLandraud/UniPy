@@ -35,7 +35,7 @@ class Component:
         pass
 
     def as_prefab(self) -> "Component":
-        return None
+        raise NotImplementedError("This method must be implemented in the child class")
 
     def _render(self, _):
         pass

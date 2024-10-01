@@ -51,6 +51,7 @@ def main():
     loop = GameLoop()
     loop.set_scene(scene)
     loop.start()
+    
     data_saver.export_to_json(scene)
 
 

@@ -4,16 +4,7 @@ from ...Basics.Vectors import Vector2D
 from ...Exceptions import FileNotFoundError
 from typing import List, TYPE_CHECKING
 from ...Basics.ID import IDGen
-
-class Rect2D:
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-
-    def __str__(self):
-        return f"<Rect2D: ({self.x}, {self.y}, {self.width}, {self.height})>"
+from ...Basics.Rects import Rect2D
 
 class Frame:
     def __init__(self, id, image: "Image", rect : Rect2D = None, size : Vector2D = None):
@@ -112,7 +103,7 @@ class Image(Component):
         copy._sprite = None
         copy._parent = None
         if not self._prefab_uuid:
-         self._prefab_uuid = IDGen.new_uuid()
+            self._prefab_uuid = IDGen.new_uuid()
         copy._prefab_uuid = self._prefab_uuid
         copy._is_prefab = True
         copy.data_frames = self.data_frames
