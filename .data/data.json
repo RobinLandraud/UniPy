@@ -1,0 +1,95 @@
+{
+    "py/object": "ECS.Systems.Scenes.Scene",
+    "name": "Main Scene",
+    "entities": [
+        {
+            "py/object": "ECS.Entities.entity.Entity",
+            "_id": 1,
+            "name": "Entity",
+            "components": {
+                "<class 'ECS.Components.Transforms.transform.Transform'>": {
+                    "py/object": "ECS.Entities.entity.ComponentCollection",
+                    "type": {
+                        "py/object": "ECS.Components.Transforms.transform.Transform",
+                        "_id": 2,
+                        "name": "Transform",
+                        "_parent": {
+                            "py/id": 2
+                        },
+                        "_type": "Transform",
+                        "_prefab_uuid": null,
+                        "_is_prefab": false,
+                        "position": {
+                            "py/object": "ECS.Basics.Vectors.vectors.Vector2D",
+                            "x": 300,
+                            "y": 300
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "py/object": "ECS.Basics.Vectors.vectors.Vector2D",
+                            "x": 1,
+                            "y": 1
+                        }
+                    },
+                    "components": [
+                        {
+                            "py/id": 5
+                        }
+                    ]
+                },
+                "<class 'ECS.Components.Sprites.Sprites.Image'>": {
+                    "py/object": "ECS.Entities.entity.ComponentCollection",
+                    "type": {
+                        "py/object": "ECS.Components.Sprites.Sprites.Image",
+                        "__reference__": "./.data/./Earth.json"
+                    },
+                    "components": [
+                        {
+                            "py/id": 10
+                        }
+                    ]
+                },
+                "<class 'ECS.Components.Sprites.Animator.Animation'>": {
+                    "py/object": "ECS.Entities.entity.ComponentCollection",
+                    "type": {
+                        "py/object": "ECS.Components.Sprites.Animator.Animation",
+                        "__reference__": "./.data/./Earth Animation.json"
+                    },
+                    "components": [
+                        {
+                            "py/id": 218
+                        }
+                    ]
+                },
+                "<class 'ECS.Components.Sprites.SpriteRenderer.SpriteRenderer'>": {
+                    "py/object": "ECS.Entities.entity.ComponentCollection",
+                    "type": {
+                        "py/object": "ECS.Components.Sprites.SpriteRenderer.SpriteRenderer",
+                        "_id": 6,
+                        "name": "Earth Renderer",
+                        "_parent": {
+                            "py/id": 2
+                        },
+                        "_type": "SpriteRenderer",
+                        "_prefab_uuid": null,
+                        "_is_prefab": false,
+                        "_sprite": {
+                            "py/id": 10
+                        },
+                        "_animation": {
+                            "py/id": 218
+                        }
+                    },
+                    "components": [
+                        {
+                            "py/id": 272
+                        }
+                    ]
+                }
+            },
+            "transform": {
+                "py/id": 5
+            }
+        }
+    ]
+}

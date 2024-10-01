@@ -97,7 +97,7 @@ class DataManager:
                 if not self._compare_attributes(attr1[key], attr2[key]):
                     return False
             return True
-        elif isinstance(attr1, list):
+        elif isinstance(attr1, (list, tuple)):
             for i in range(len(attr1)):
                 if not self._compare_attributes(attr1[i], attr2[i]):
                     return False
