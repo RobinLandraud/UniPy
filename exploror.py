@@ -99,7 +99,7 @@ def create_pimg_viewer_window(pf: Image):
     if dpg.does_item_exist("PIMG Viewer"):
         dpg.show_item("PIMG Viewer")
         return
-    with dpg.window(label="PIMG Viewer", width=800, height=600, pos=(0, 0), on_close=close_pigm_viewer_window, tag="PIMG Viewer"):
+    with dpg.window(label="PIMG Viewer", tag="PIMG Viewer", width=1400, height=1000-350, on_close=close_pigm_viewer_window, no_move=True, no_resize=True):
         dpg.add_input_int(label="Columns", tag="columns_input")
         dpg.add_input_int(label="Rows", tag="rows_input")
         dpg.add_input_int(label="Start Row", tag="start_row_input")
@@ -190,7 +190,7 @@ def init():
     viewport_width = 1400  # Set this to the width of your viewport
 
     # Create a custom window for the file explorer and position it at the bottom
-    with dpg.window(label="File Explorer", width=viewport_width, height=350, pos=(0, viewport_height - 350)):
+    with dpg.window(label="File Explorer", width=viewport_width, height=350, pos=(0, viewport_height - 350), no_close=True, no_move=True, no_resize=True):
         dpg.add_input_text(label="Directory", default_value=os.path.abspath("."), tag="directory_input")
         dpg.add_button(label="Change Directory", callback=update_file_explorer, user_data="directory_input")
         with dpg.child_window(autosize_x=True, autosize_y=True, tag="file_explorer_content"):
