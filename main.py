@@ -5,7 +5,7 @@ from ECS.Entities.entity import Entity
 from ECS.Components import Image, Animation, SpriteRenderer, FrameDuration
 from ECS.Systems import Window, GameLoop, Scene
 from ECS.Basics import Vector2D
-from ECS.Saver import DataSaver
+from ECS.Data import DataManager
 
 def create_scene():
     mainScene = Scene('Main Scene')
@@ -14,7 +14,7 @@ def create_scene():
     image = Image('Earth', "./Assets/earth.png").make_frames(50, 1, 50, 0.1)
 
     pf = image.as_prefab()
-    DataSaver().export_prefab(pf, 'image_prefab.pimg')
+    DataManager().export_prefab(pf, 'image_prefab.pimg')
 
     animation = Animation("Earth Animation", image, [FrameDuration(49-i, 0.1) for i in range(50)])
     s_renderer = SpriteRenderer("Earth Renderer", image, animation)
@@ -27,7 +27,7 @@ def create_scene():
     return mainScene
 
 def main():
-    data_saver = DataSaver()
+    data_saver = DataManager()
     #mainScene = create_scene()
     #data_saver.export_to_json(mainScene)
     scene = data_saver.import_from_json()
@@ -36,10 +36,10 @@ def main():
 
     #image_prefab = image.as_prefab()
     #anim_prefab = animation.as_prefab()
-    #DataSaver().export_prefab(image_prefab, 'image_prefab.pimg')
-    #DataSaver().export_prefab(anim_prefab, 'anim_prefab.panim')
-    #image_from_prefab = DataSaver().import_prefab('image_prefab.pimg')
-    #anim_from_prefab = DataSaver().import_prefab('anim_prefab.panim')
+    #DataManager().export_prefab(image_prefab, 'image_prefab.pimg')
+    #DataManager().export_prefab(anim_prefab, 'anim_prefab.panim')
+    #image_from_prefab = DataManager().import_prefab('image_prefab.pimg')
+    #anim_from_prefab = DataManager().import_prefab('anim_prefab.panim')
     #for attr in image.__dict__.keys():
     #    print(f"Attribute {attr}: {getattr(image, attr)}")
 

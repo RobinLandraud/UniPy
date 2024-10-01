@@ -5,7 +5,7 @@ from typing import Type
 from ..Basics.ID import IDGen
 from ..Systems.Scenes import Scene
 
-class DataSaver:
+class DataManager:
     def __init__(self, path="./.data/"):
         self.path = path
         if not os.path.exists(self.path):
@@ -89,6 +89,28 @@ class DataSaver:
             file.write(json_result)
         return json_result
     
+    def _compare_attributes(self, attr1, attr2):
+        if isinstance(attr1, dict):
+            for key in attr1.keys():
+                if key not in attr2:
+                    return False
+                if not self._compare_attributes(attr1[key], attr2[key]):
+                    return False
+            return True
+        elif isinstance(attr1, list):
+            for i in range(len(attr1)):
+                if not self._compare_attributes(attr1[i], attr2[i]):
+                    return False
+            return True
+        elif hasattr(attr1, '__dict__'):
+            for attr in attr1.__dict__.keys():
+                if not attr.startswith('_') and not attr.startswith('__'):
+                    if not self._compare_attributes(getattr(attr1, attr), getattr(attr2, attr)):
+                        return False
+            return True
+        else:
+            return attr1 == attr2
+
     def update_scene_with_component_prefab(self, scene: Scene, prefab_path: str):
         prefab = self.import_prefab(prefab_path)
         for entity in scene.entities:
@@ -97,8 +119,9 @@ class DataSaver:
                     if component._prefab_uuid == prefab._prefab_uuid:
                         for attr in prefab.__dict__.keys():
                             if not attr.startswith('_') and not attr.startswith('__'):
-                                val = getattr(prefab, attr)
-                                if val and val != getattr(component, attr):
+                                pf_val = getattr(prefab, attr)
+                                comp_val = getattr(component, attr)
+                                if not self._compare_attributes(pf_val, comp_val):
                                     print(f"Updating {component.name} attribute {attr}")
-                                    setattr(component, attr, val)
+                                    setattr(component, attr, pf_val)
         return scene
