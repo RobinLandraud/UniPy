@@ -12,7 +12,6 @@ class Scene:
         self.entities.remove(entity)
 
     def awake(self):
-        print(f"Awaking {self.name}")
         for entity in self.entities:
             entity.awake()
 

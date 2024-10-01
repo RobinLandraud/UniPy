@@ -42,7 +42,7 @@ class Image(Component):
     def __init__(self, name, source, size: Vector2D = None):
         super().__init__(name)
         self.source = source
-        self.frames : List[Frame] = []
+        self._frames : List[Frame] = []
         if not size:
             tmp = pygame.image.load(source)
             size = Vector2D(tmp.get_width(), tmp.get_height())
@@ -72,10 +72,10 @@ class Image(Component):
         return self.sprite
     
     def get_frame(self, index):
-        return self.frames[index]
+        return self._frames[index]
     
     def get_frames(self):
-        return self.frames
+        return self._frames
     
     def get_n_frames(self):
         return len(self.data_frames)
@@ -100,7 +100,7 @@ class Image(Component):
         return self
 
     def _cut_frames(self):
-        self.frames = []
+        self._frames = []
         for data_frame in self.data_frames:
-            self.frames.append(Frame(data_frame["id"], self, data_frame["surface"], data_frame["size"]))
+            self._frames.append(Frame(data_frame["id"], self, data_frame["surface"], data_frame["size"]))
         return self

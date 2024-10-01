@@ -5,15 +5,7 @@ from ECS.Entities.entity import Entity
 from ECS.Components import Image, Animation, SpriteRenderer, FrameDuration
 from ECS.Systems import Window, GameLoop, Scene
 from ECS.Basics import Vector2D
-from typing import List
-import json
-import jsonpickle
-
-def export_to_json(entity: Entity, file_name: str = './data.json'):
-    json_result = jsonpickle.encode(entity, indent=4, make_refs=True)
-    with open(file_name, 'w') as file:
-        file.write(json_result)
-    return json_result
+from ECS.Saver import DataSaver
 
 def create_scene():
     mainScene = Scene('Main Scene')
@@ -32,12 +24,9 @@ def create_scene():
 
 def main():
     #mainScene = create_scene()
-    #export_to_json(mainScene)
-
-    with open('./data.json', 'r') as file:
-        json_data = file.read()
-    scene = jsonpickle.decode(json_data)
-
+    data_saver = DataSaver()
+    #data_saver.export_to_json(mainScene)
+    scene = data_saver.import_from_json()
 
     Window(800, 600, 'Window')
     Window().set_bg_color((0, 0, 255))

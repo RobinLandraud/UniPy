@@ -11,7 +11,7 @@ class Component:
             name = f"Component {self.id}"
         self.name = name
         self.parent: "Entity" = parent
-        self.type = self.__class__.__name__         
+        self.type = self.__class__.__name__
 
     def awake(self):
         pass
