@@ -3,6 +3,7 @@ from .. import Component
 from ...Basics.Vectors import Vector2D
 from ...Exceptions import FileNotFoundError
 from typing import List, TYPE_CHECKING
+from ...Basics.ID import IDGen
 
 class Rect2D:
     def __init__(self, x, y, width, height):
@@ -53,10 +54,10 @@ class Image(Component):
     def awake(self):
         self._original = self._load_sprite(self.source)
         if self.size:
-            self.sprite = pygame.transform.scale(self._original, (self.size.x, self.size.y))
+            self._sprite = pygame.transform.scale(self._original, (self.size.x, self.size.y))
         else:
-            self.sprite = self._original.copy()
-            self.size = Vector2D(self.sprite.get_width(), self.sprite.get_height())
+            self._sprite = self._original.copy()
+            self.size = Vector2D(self._sprite.get_width(), self._sprite.get_height())
 
         if self.data_frames:
             self._cut_frames()
@@ -69,7 +70,7 @@ class Image(Component):
         return sprite
 
     def get(self):
-        return self.sprite
+        return self._sprite
     
     def get_frame(self, index):
         return self._frames[index]
@@ -85,7 +86,7 @@ class Image(Component):
     
     def set_size(self, size):
         self.size = size
-        self.sprite = pygame.transform.scale(self._original, size)
+        self._sprite = pygame.transform.scale(self._original, size)
 
     def make_frames(self, x_frames, y_frames, n_frames, x_start=0, y_start=0, size : Vector2D = None) -> "Image":
         self.data_frames = []
@@ -104,3 +105,15 @@ class Image(Component):
         for data_frame in self.data_frames:
             self._frames.append(Frame(data_frame["id"], self, data_frame["surface"], data_frame["size"]))
         return self
+    
+    def as_prefab(self):
+        copy = Image(self.name, self.source, self.size)
+        copy._id = None
+        copy._sprite = None
+        copy._parent = None
+        if not self._prefab_uuid:
+         self._prefab_uuid = IDGen.new_uuid()
+        copy._prefab_uuid = self._prefab_uuid
+        copy._is_prefab = True
+        copy.data_frames = self.data_frames
+        return copy

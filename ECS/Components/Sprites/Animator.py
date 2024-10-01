@@ -4,6 +4,7 @@ from .Sprites import Image, Frame
 from ...Basics.Vectors import Vector2D
 from ...Basics.Time.time import Time
 from typing import List
+from ...Basics.ID import IDGen
 
 class FrameDuration:
     def __init__(self, id, duration):
@@ -13,12 +14,12 @@ class FrameDuration:
 class Animation(Component):
     def __init__(self, name, image, durations: List[FrameDuration]):
         super().__init__(name)
-        self.image = image
+        self._image = image
         self.time = 0
-        self._n_frames = self.image.get_n_frames()
+        self._n_frames = self._image.get_n_frames()
         if len(durations) != self._n_frames:
             raise ValueError("The number of durations must be the same as the number of frames")
-        self.durations: dict = durations
+        self.durations: List[FrameDuration] = durations
         self.current_frame = self.durations[0].id
         self.current_frame_index = 0
 
@@ -36,4 +37,15 @@ class Animation(Component):
         self.dirations[index] = duration
 
     def get_current_frame(self):
-        return self.image.get_frame(self.current_frame)
+        return self._image.get_frame(self.current_frame)
+    
+    def as_prefab(self) -> Component:
+        copy = Animation(self.name, self._image, self.durations)
+        copy._is_prefab = True
+        copy._id = None
+        copy._parent = None
+        copy._image = None
+        if not self._prefab_uuid:
+            self._prefab_uuid = IDGen.new_uuid()
+        copy._prefab_uuid = self._prefab_uuid
+        return copy

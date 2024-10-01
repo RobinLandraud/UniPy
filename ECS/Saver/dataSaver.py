@@ -2,6 +2,8 @@ import json
 import jsonpickle
 import os
 from typing import Type
+from ..Basics.ID import IDGen
+from ..Systems.Scenes import Scene
 
 class DataSaver:
     def __init__(self, path="./.data/"):
@@ -70,5 +72,33 @@ class DataSaver:
         with open(file_path, 'r') as file:
             json_data = file.read()
         data = json.loads(json_data)
-        entity = jsonpickle.decode(json.dumps(data))
-        return entity
+        obj = jsonpickle.decode(json.dumps(data))
+        if hasattr(obj, '_is_prefab') and obj._is_prefab:
+            obj._is_prefab = False
+        if hasattr(obj, 'id') and not obj.id:
+            obj.id = IDGen.new_id()
+        return obj
+    
+    def export_prefab(self, obj: Type, file_path: str):
+        if hasattr(obj, '_is_prefab') and not obj._is_prefab and hasattr(obj, 'as_prefab'):
+            obj = obj.as_prefab()
+        json_result = jsonpickle.encode(obj, indent=4, make_refs=True)
+        json_data = json.loads(json_result)
+        json_result = json.dumps(json_data, indent=4)
+        with open(file_path, 'w') as file:
+            file.write(json_result)
+        return json_result
+    
+    def update_scene_with_component_prefab(self, scene: Scene, prefab_path: str):
+        prefab = self.import_prefab(prefab_path)
+        for entity in scene.entities:
+            for component_type in entity.components:
+                for component in entity.components[component_type].get():
+                    if component._prefab_uuid == prefab._prefab_uuid:
+                        for attr in prefab.__dict__.keys():
+                            if not attr.startswith('_') and not attr.startswith('__'):
+                                val = getattr(prefab, attr)
+                                if val and val != getattr(component, attr):
+                                    print(f"Updating {component.name} attribute {attr}")
+                                    setattr(component, attr, val)
+        return scene

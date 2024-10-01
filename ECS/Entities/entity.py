@@ -30,7 +30,7 @@ class ComponentCollection:
         self.components.remove(component)
 
     def remove(self, id: int):
-        component = [c for c in self.components if c.id == id]
+        component = [c for c in self.components if c._id == id]
         if component:
             self.components.remove(component[0])
 
@@ -39,16 +39,16 @@ class ComponentCollection:
 
 class Entity:
     def __init__(self, name=None, transform: Transform = None):
-        self.id = IDGen.new_id()
+        self._id = IDGen.new_id()
         if not name:
-            name = f"Entity {self.id}"
+            name = f"Entity {self._id}"
         self.name = name
         self.components = {}
         self.transform = transform if transform else Transform()
         self.add_component(self.transform)
 
     def add_component(self, component: 'Component'):
-        component.parent = self
+        component._parent = self
         component_type = type(component)
         if not type(component) in self.components:
             self.components[component_type] = ComponentCollection(component)
@@ -93,7 +93,7 @@ class Entity:
                 component._render(window)
 
     def __str__(self):
-        return f"<[{self.id}] Entity: '{self.name}'>"
+        return f"<[{self._id}] Entity: '{self.name}'>"
     
     def __repr__(self):
-        return f"<[{self.id}] Entity: '{self.name}'>"
+        return f"<[{self._id}] Entity: '{self.name}'>"

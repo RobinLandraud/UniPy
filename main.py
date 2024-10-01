@@ -12,6 +12,10 @@ def create_scene():
     entity = Entity('Entity')
     entity.transform.position = Vector2D(300, 300)
     image = Image('Earth', "./Assets/earth.png").make_frames(50, 1, 50, 0.1)
+
+    pf = image.as_prefab()
+    DataSaver().export_prefab(pf, 'image_prefab.pimg')
+
     animation = Animation("Earth Animation", image, [FrameDuration(49-i, 0.1) for i in range(50)])
     s_renderer = SpriteRenderer("Earth Renderer", image, animation)
 
@@ -23,16 +27,31 @@ def create_scene():
     return mainScene
 
 def main():
-    #mainScene = create_scene()
     data_saver = DataSaver()
+    #mainScene = create_scene()
     #data_saver.export_to_json(mainScene)
     scene = data_saver.import_from_json()
+    data_saver.update_scene_with_component_prefab(scene, 'image_prefab.pimg')
+
+
+    #image_prefab = image.as_prefab()
+    #anim_prefab = animation.as_prefab()
+    #DataSaver().export_prefab(image_prefab, 'image_prefab.pimg')
+    #DataSaver().export_prefab(anim_prefab, 'anim_prefab.panim')
+    #image_from_prefab = DataSaver().import_prefab('image_prefab.pimg')
+    #anim_from_prefab = DataSaver().import_prefab('anim_prefab.panim')
+    #for attr in image.__dict__.keys():
+    #    print(f"Attribute {attr}: {getattr(image, attr)}")
+
+    print(scene)
+
 
     Window(800, 600, 'Window')
     Window().set_bg_color((0, 0, 255))
     loop = GameLoop()
     loop.set_scene(scene)
     loop.start()
+    data_saver.export_to_json(scene)
 
 
 if __name__ == '__main__':

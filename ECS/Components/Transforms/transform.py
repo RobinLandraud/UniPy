@@ -46,7 +46,7 @@ class Transform(Component):
 
     def get_scale(self):
         """Return the current scale."""
-        return f"<[{self.id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
+        return f"<[{self._id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
 
     def __str__(self):
-        return f"<[{self.id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
+        return f"<[{self._id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
