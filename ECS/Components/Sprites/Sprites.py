@@ -81,9 +81,11 @@ class Image(Component):
 
     def make_frames(self, x_frames, y_frames, n_frames, x_start=0, y_start=0, size : Vector2D = None) -> "Image":
         self.data_frames = []
+        x_frame_size = self.size.x // x_frames
+        y_frame_size = self.size.y // y_frames
         for i in range(n_frames):
-            x = x_start + (i % x_frames) * self.size.x // x_frames
-            y = y_start + (i // x_frames) * self.size.y // y_frames
+            x = x_start * x_frame_size + (i % x_frames) * x_frame_size
+            y = y_start * y_frame_size + (i // x_frames) * y_frame_size
             self.data_frames.append({
                 "id": i,
                 "surface": Rect2D(x, y, self.size.x // x_frames, self.size.y // y_frames),
