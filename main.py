@@ -11,25 +11,23 @@ def create_scene():
     mainScene = Scene('Main Scene')
     entity = Entity('Entity')
     entity.transform.position = Vector2D(300, 300)
-    image = Image('Earth', "./Assets/earth.png").make_frames(50, 1, 50, 0.1)
-
-    pf = image.as_prefab()
-    DataManager().export_prefab(pf, 'image_prefab.pimg')
-
+    image = Image('Earth', "./Assets/earth.png").make_frames(50, 1, 50)
     animation = Animation("Earth Animation", image, [FrameDuration(49-i, 0.1) for i in range(50)])
     s_renderer = SpriteRenderer("Earth Renderer", image, animation)
-
     entity.add_component(image)
     entity.add_component(animation)
     entity.add_component(s_renderer)
+
+    #pf = image.as_prefab()
+    #DataManager().export_prefab(pf, 'image_prefab.pimg')
 
     mainScene.add_entity(entity)
     return mainScene
 
 def main():
     data_saver = DataManager()
-    #mainScene = create_scene()
-    #data_saver.export_to_json(mainScene)
+    mainScene = create_scene()
+    data_saver.export_to_json(mainScene)
     scene = data_saver.import_from_json()
     data_saver.update_scene_with_component_prefab(scene, 'image_prefab.pimg')
 

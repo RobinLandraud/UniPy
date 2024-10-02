@@ -41,30 +41,31 @@ def get_pimg_texture(pf):
 def open_pimg_file(file_path, viewport_width, viewport_height):
     pf: Image = DataManager().import_prefab(file_path)
     pf.awake()
-    create_pimg_viewer_window(pf, viewport_width, viewport_height)
+    add_pimg_viewer_window(pf, viewport_width, viewport_height)
 
-def create_pimg_viewer_window(pf: Image, viewport_width, viewport_height):
+def add_pimg_viewer_window(pf: Image, viewport_width, viewport_height):
     if dpg.does_item_exist("PIMG Viewer"):
         update_pimg_viewer_window(pf)
         dpg.show_item("PIMG Viewer")
         return
-    with dpg.window(label="PIMG Viewer", tag="PIMG Viewer", width=viewport_width, height=viewport_height-350, on_close=close_pigm_viewer_window, no_move=True, no_resize=True):
+    with dpg.window(label="PIMG Viewer", tag="PIMG Viewer", width=int(viewport_width * 3/4), height=int(viewport_height * 3/4), on_close=close_pigm_viewer_window, no_move=True, no_resize=True, no_title_bar=False, pos=(viewport_width * 1/4, 0)):
         dpg.add_input_int(label="Columns", tag="columns_input", default_value=1, min_value=1, on_enter=True, callback=update_data, user_data=pf)
         dpg.add_input_int(label="Rows", tag="rows_input", default_value=1, min_value=1, on_enter=True, callback=update_data, user_data=pf)
         dpg.add_input_int(label="Start Row Index", tag="start_row_input", default_value=0, min_value=0, on_enter=True, callback=update_data, user_data=pf)
         dpg.add_input_int(label="Start Column Index", tag="start_column_input", default_value=0, min_value=0, on_enter=True, callback=update_data, user_data=pf)
         dpg.add_input_int(label="Number of Frames", tag="n_frames_input", default_value=1, min_value=1, on_enter=True, callback=update_data, user_data=pf)
         #dpg.add_button(label="Update", callback=update_data, user_data=pf)
-        dpg.add_button(label="Add Frame", callback=add_frame, user_data=pf)
-        dpg.add_button(label="Order by ID", callback=order_by_id, user_data=pf)
-        dpg.add_button(label="Overwrite IDs", callback=overwrite_ids, user_data=pf)
+        with dpg.group(horizontal=True):
+            dpg.add_button(label="Add Frame", callback=add_frame, user_data=pf)
+            dpg.add_button(label="Order by ID", callback=order_by_id, user_data=pf)
+            dpg.add_button(label="Overwrite IDs", callback=overwrite_ids, user_data=pf)
         surface, texture_width, texture_height = get_pimg_texture(pf)
         with dpg.texture_registry(show=False):
             if not dpg.does_item_exist("pimg_texture"):
                 texture = dpg.add_raw_texture(texture_width, texture_height, surface.flatten(), format=dpg.mvFormat_Float_rgb, tag="pimg_texture")
             else:
                 dpg.set_value("pimg_texture", surface.flatten())
-        with dpg.tree_node(label=f"pimg_node", default_open=True, tag=f"pimg_node"):
+        with dpg.tree_node(label=f"{texture_width} / {texture_height} px", default_open=True, tag=f"pimg_node"):
             with dpg.child_window(label="Pygame Surface Texture", tag="pimg_viewer", horizontal_scrollbar=True, height=min(200, texture_height + 25)):
                 dpg.add_image(texture)
         with dpg.child_window(autosize_x=True, autosize_y=True, tag="frame_list"):

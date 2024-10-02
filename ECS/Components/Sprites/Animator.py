@@ -15,7 +15,7 @@ class Animation(Component):
     def __init__(self, name, image, durations: List[FrameDuration]):
         super().__init__(name)
         self._image = image
-        self.time = 0
+        self._time = 0
         self._n_frames = self._image.get_n_frames()
         if len(durations) != self._n_frames:
             raise ValueError("The number of durations must be the same as the number of frames")
@@ -24,9 +24,9 @@ class Animation(Component):
         self.current_frame_index = 0
 
     def update(self):
-        self.time += Time.delta_time()
-        if self.time >= self.durations[self.current_frame].duration:
-            self.time = 0
+        self._time += Time.delta_time()
+        if self._time >= self.durations[self.current_frame].duration:
+            self._time = 0
             self.current_frame_index = (self.current_frame_index + 1) % self._n_frames
             self.current_frame = self.durations[self.current_frame_index].id
 

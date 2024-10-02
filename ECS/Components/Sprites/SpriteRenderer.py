@@ -4,14 +4,14 @@ from ...Systems.Windows import Window
 
 
 class SpriteRenderer(Component):
-    def __init__(self, name, sprite=None, animation=None):
+    def __init__(self, name, image=None, animation=None):
         super().__init__(name)
-        self._sprite = sprite
+        self.image = image
         self._animation = animation
 
     def Awake(self):
-        if not self._sprite:
-            self._sprite = self._parent.get_component("Image")
+        if not self.image:
+            self.image = self._parent.get_component("Image")
         if not self._animation:
             self._animation = self._parent.get_component("Animation")
 
@@ -23,9 +23,9 @@ class SpriteRenderer(Component):
         if self._animation:
             window.get_screen().blit(self._animation.get_current_frame().get(), self._parent.transform.position.as_tuple())
         else:
-            window.get_screen().blit(self._sprite.get(), self._parent.transform.position.as_tuple())
+            window.get_screen().blit(self.image.get(), self._parent.transform.position.as_tuple())
 
     def get_current_sprite(self):
         if self._animation:
             return self._animation.get_current_frame()
-        return self._sprite
+        return self.image

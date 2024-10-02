@@ -1,46 +1,36 @@
-import pygame
-import numpy as np
 import dearpygui.dearpygui as dpg
 
-# Initialize Pygame
-pygame.init()
+def main():
+    dpg.create_context()
 
-# Define texture size
-texture_width = 256
-texture_height = 256
+    # Create a window
+    with dpg.window(label="Tree Node with Columns Example"):
+        with dpg.tree_node(label="Parent Node"):
+            # Define max columns and rows
+            max_columns = 3
+            max_rows = 5
 
-# Create a Pygame surface and fill it with black
-surface = pygame.Surface((texture_width, texture_height))
-surface.fill((0, 255, 0))  # Fill with green
-dpg.create_context()
+            # Generate sample data
+            sample_data = [f"Item {i + 1}" for i in range(max_columns * max_rows)]
 
-# Convert Pygame surface to a NumPy array
-# Convert the surface to the pixel format RGB
-def convert_to_rgb(surface):
-    raw_data = pygame.image.tostring(surface, 'RGB')
-    texture_data = np.frombuffer(raw_data, np.uint8).reshape((texture_height, texture_width, 3))
-    texture_data = texture_data.astype(np.float32) / 255.0
-    return texture_data
+            # Create a loop to add items in columns
+            for row in range(max_rows):
+                # Start a group to hold the columns
+                with dpg.group(horizontal=True):
+                    for col in range(max_columns):
+                        # Calculate the index based on the current row and column
+                        index = row * max_columns + col
+                        if index < len(sample_data):  # Check to avoid index out of range
+                            dpg.add_text(sample_data[index])
 
+                # Add spacing between rows for better visibility (optional)
+                dpg.add_spacer()
 
-# Initialize Dear PyGui
+    dpg.create_viewport(title='Dear PyGui Example', width=600, height=400)
+    dpg.setup_dearpygui()
+    dpg.show_viewport()
+    dpg.start_dearpygui()
+    dpg.destroy_context()
 
-
-def print_surface(surface):
-    texture_data = convert_to_rgb(surface)
-    with dpg.texture_registry(show=False):
-        texture = dpg.add_raw_texture(texture_width, texture_height, texture_data.flatten(), format=dpg.mvFormat_Float_rgb)
-    with dpg.window(label="Pygame Surface Texture"):
-        dpg.add_image(texture)
-
-print_surface(surface)
-
-# Show the GUI
-dpg.create_viewport(title='Pygame Surface Texture Example', width=600, height=400)
-dpg.setup_dearpygui()
-dpg.show_viewport()
-dpg.start_dearpygui()
-dpg.destroy_context()
-
-# Quit Pygame
-pygame.quit()
+if __name__ == "__main__":
+    main()

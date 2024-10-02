@@ -46,7 +46,7 @@ def update_file_explorer(sender, app_data, user_data):
 
 def add_file_explorer(viewport_width=1400, viewport_height=1000):
 # Create a custom window for the file explorer and position it at the bottom
-    with dpg.window(label="File Explorer", width=viewport_width, height=350, pos=(0, viewport_height - 350), no_close=True, no_move=True, no_resize=True):
+    with dpg.window(label="File Explorer", width=viewport_width, height=int(viewport_height * 1/4), pos=(0, int(viewport_height * 3/4)), no_close=True, no_move=True, no_resize=True, no_title_bar=True):
         dpg.add_input_text(label="Directory", default_value=os.path.abspath("."), tag="directory_input")
         dpg.add_button(label="Change Directory", callback=update_file_explorer, user_data="directory_input")
         with dpg.child_window(autosize_x=True, autosize_y=True, tag="file_explorer_content"):
