@@ -1,5 +1,6 @@
 from ..Basics.ID import IDGen
 from typing import TYPE_CHECKING, List
+from ..Systems.TagHandler import TagHandler
 import uuid
 
 if TYPE_CHECKING:
@@ -7,6 +8,7 @@ if TYPE_CHECKING:
 
 class Component:
     def __init__(self, name = None, parent: "Entity" = None):
+        TagHandler.add_tag(self, name)
         self._id = IDGen.new_id()
         if not name:
             name = f"Component {self.id}"

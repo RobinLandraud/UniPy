@@ -11,10 +11,20 @@ class DataManager:
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         self.file_path = os.path.join(self.path, f'data.json')
+        self._references = {
+            "py/object": [
+                "ECS.Components.Sprites.Sprites.Image",
+                "ECS.Components.Sprites.Animator.Animation"
+            ]
+        }
 
-    def _replace_data_with_reference(self, d, target_key, target_value):
+    def _rec_replace_data_with_reference(self, d, target_key, target_value):
         if isinstance(d, dict):
             if target_key in d and d[target_key] == target_value:
+                for t_key in self._references:
+                    for t_value in self._references[t_key]:
+                        for key in d.keys():
+                            self._replace_data_with_reference(d[key], t_key, t_value)
                 file_path = os.path.join(self.path, f'./{d["name"]}.json')
                 with open(file_path, 'w') as file:
                     file.write(json.dumps(d, indent=4))
@@ -30,6 +40,38 @@ class DataManager:
                     for item in value:
                         if isinstance(item, dict):
                             self._replace_data_with_reference(item, target_key, target_value)
+
+    def _replace_data_with_reference(self, d):
+        stack = [d]
+        to_write = []
+
+        while stack:
+            current_dict = stack.pop()
+
+            if isinstance(current_dict, dict):
+                for ref_key, ref_values in self._references.items():
+                    if ref_key in current_dict and current_dict[ref_key] in ref_values:
+                        to_write.append(current_dict) # append at the end of the list
+                        break
+
+                for key, value in current_dict.items():
+                    if isinstance(value, dict):
+                        stack.append(value)
+                    elif isinstance(value, list):
+                        for item in value:
+                            if isinstance(item, dict):
+                                stack.append(item)
+
+        for current_dict in to_write: # read from the end to the beginning
+            file_path = os.path.join(self.path, f'{current_dict["name"]}.json')
+            with open(file_path, 'w') as file:
+                file.write(json.dumps(current_dict, indent=4))
+
+            keys_to_delete = [key for key in current_dict.keys() if key not in self._references]
+            for key in keys_to_delete:
+                del current_dict[key]
+
+            current_dict['__reference__'] = file_path
 
     def _replace_reference_with_data(self, d):
         if isinstance(d, dict):
@@ -49,11 +91,19 @@ class DataManager:
                         if isinstance(item, dict):
                             self._replace_reference_with_data(item)
 
+    def free_data(self):
+        if os.path.exists(self.path):
+            for file in os.listdir(self.path):
+                os.remove(os.path.join(self.path, file))
+
     def export_to_json(self, obj: Type):
+        self.free_data()
         json_result = jsonpickle.encode(obj, indent=4, make_refs=True)
         json_data = json.loads(json_result)
-        self._replace_data_with_reference(json_data, "py/object", "ECS.Components.Sprites.Sprites.Image")
-        self._replace_data_with_reference(json_data, "py/object", "ECS.Components.Sprites.Animator.Animation")
+        #for key in self._references:
+        #    for value in self._references[key]:
+        #        self._replace_data_with_reference(json_data, key, value)
+        self._replace_data_with_reference(json_data)
         json_result = json.dumps(json_data, indent=4)
         with open(self.file_path, 'w') as file:
             file.write(json_result)

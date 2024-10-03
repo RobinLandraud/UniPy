@@ -36,7 +36,7 @@ class Image(Component):
         self.source = source
         self._frames : List[Frame] = []
         if not size:
-            tmp = pygame.image.load(source)
+            tmp = pygame.image.load(source).convert_alpha()
             size = Vector2D(tmp.get_width(), tmp.get_height())
         self.size = size
         self.data_frames = []

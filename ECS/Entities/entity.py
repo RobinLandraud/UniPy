@@ -3,6 +3,7 @@ from ..Basics.Vectors import Vector2D
 
 from typing import List, Optional
 from ..Components import Component, Transform
+from ..Systems.TagHandler import TagHandler
 
 class ComponentCollection:
     def __init__(self, type: type = "Component"):
@@ -39,15 +40,18 @@ class ComponentCollection:
 
 class Entity:
     def __init__(self, name=None, transform: Transform = None):
+        TagHandler.add_tag(self, name)
         self._id = IDGen.new_id()
         if not name:
             name = f"Entity {self._id}"
         self.name = name
         self.components = {}
-        self.transform = transform if transform else Transform()
+        self.transform = transform if transform else Transform(f"Transform {self.name}")
         self.add_component(self.transform)
 
     def add_component(self, component: 'Component'):
+        if component._parent:
+            raise Exception(f"Component '{component.name}' already has a parent")
         component._parent = self
         component_type = type(component)
         if not type(component) in self.components:

@@ -14,6 +14,9 @@ def add_hierarchy(data: Scene, viewport_width=1400, viewport_height=1000):
                         for component_type in entity.components:
                             components = entity.get_components(component_type).get()
                             for component in components:
+                                if dpg.does_item_exist(component.name):
+                                    print(f"Component {component.name} already exists")
+                                    continue
                                 with dpg.tree_node(label=component.name, tag=component.name, default_open=True):
                                     for key, value in component.__dict__.items():
                                         if not key.startswith("_"):

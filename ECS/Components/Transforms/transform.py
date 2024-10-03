@@ -2,8 +2,8 @@ from ...Basics.Vectors import Vector2D
 from ..component import Component
 
 class Transform(Component):
-    def __init__(self, position: Vector2D = Vector2D(0, 0), rotation: float = 0, scale: Vector2D = Vector2D(1, 1)):
-        super().__init__("Transform")
+    def __init__(self, name, position: Vector2D = Vector2D(0, 0), rotation: float = 0, scale: Vector2D = Vector2D(1, 1)):
+        super().__init__(name)
         self.position = position  # Use Vector2D for position
         self.rotation = rotation  # Rotation in degrees
         self.scale = scale # Use Vector2D for scale
@@ -46,7 +46,7 @@ class Transform(Component):
 
     def get_scale(self):
         """Return the current scale."""
-        return f"<[{self._id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
+        return f"<[{self._id}] Transform: {self.name}, Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
 
     def __str__(self):
-        return f"<[{self._id}] Transform: Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"
+        return f"<[{self._id}] Transform: {self.name}, Position: {self.position}, Rotation: {self.rotation}, Scale: {self.scale}>"

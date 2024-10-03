@@ -25,10 +25,10 @@ class Animation(Component):
 
     def update(self):
         self._time += Time.delta_time()
-        if self._time >= self.durations[self.current_frame].duration:
-            self._time = 0
+        while self._time >= self.durations[self.current_frame].duration:
+            self._time -= self.durations[self.current_frame].duration
             self.current_frame_index = (self.current_frame_index + 1) % self._n_frames
-            self.current_frame = self.durations[self.current_frame_index].id
+        self.current_frame = self.durations[self.current_frame_index].id
 
     def set_durations(self, durations: list):
         self.set_durations = durations
